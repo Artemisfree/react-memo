@@ -62,3 +62,44 @@
 .levelLink:visited {
   color: #0080c1;
 }
+
+.checkboxContainer {
+  color: #004980;
+  font-family: StratosSkyeng;
+  text-align: center;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkboxContainer label {
+  display: flex;
+  align-items: center;
+}
+
+.checkboxContainer input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  appearance: none;
+  background-color: #fff;
+  border: 2px solid #004980;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+}
+
+.checkboxContainer input[type="checkbox"]:checked {
+  background-color: #004980;
+}
+
+.checkboxContainer input[type="checkbox"]:checked::before {
+  content: "✔";
+  color: #fff;
+  font-size: 16px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

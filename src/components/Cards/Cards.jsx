@@ -40,11 +40,13 @@ function getTimerValue(startDate, endDate) {
  * pairsCount - сколько пар будет в игре
  * previewSeconds - сколько секунд пользователь будет видеть все карты открытыми до начала игры
  */
-export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
+export function Cards({ pairsCount = 3, previewSeconds = 5, threeMistakesMode = false }) {
   // В cards лежит игровое поле - массив карт и их состояние открыта\закрыта
   const [cards, setCards] = useState([]);
   // Текущий статус игры
   const [status, setStatus] = useState(STATUS_PREVIEW);
+
+  const [mistakes, setMistakes] = useState(0);
 
   // Дата начала игры
   const [gameStartDate, setGameStartDate] = useState(null);
@@ -73,6 +75,7 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
     setGameEndDate(null);
     setTimer(getTimerValue(null, null));
     setStatus(STATUS_PREVIEW);
+    setMistakes(0);
   }
 
   /**
@@ -209,7 +212,9 @@ export function Cards({ pairsCount = 3, previewSeconds = 5 }) {
           />
         ))}
       </div>
-
+      {threeMistakesMode && status === STATUS_IN_PROGRESS ? (
+        <div className={styles.mistakes}>Осталось {3 - mistakes} попытки</div>
+      ) : null}
       {isGameEnded ? (
         <div className={styles.modalContainer}>
           <EndGameModal
