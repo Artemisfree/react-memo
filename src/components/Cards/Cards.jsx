@@ -130,10 +130,16 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, threeMistakesMode = 
 
     // "Игрок проиграл", т.к на поле есть две открытые карты без пары
     if (playerLost) {
-      finishGame(STATUS_LOST);
+      if (threeMistakesMode) {
+        setMistakes(mistakes + 1);
+        if (mistakes + 1 >= 3) {
+          finishGame(STATUS_LOST);
+        }
+      } else {
+        finishGame(STATUS_LOST);
+      }
       return;
     }
-
     // ... игра продолжается
   };
 
