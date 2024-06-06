@@ -29,9 +29,12 @@ export function SelectLevelPage() {
         <div className={styles.checkboxContainer}>
           <label>
             <input type="checkbox" checked={threeMistakesMode} onChange={e => setThreeMistakesMode(e.target.checked)} />
-            Режим трех ошибок
+            Легкий режим (3 жизни)
           </label>
         </div>
+        <Link to="/leaderboard" className={styles.leaderboardLink}>
+          Перейти к лидерборду
+        </Link>
       </div>
     </div>
   );

@@ -1,12 +1,13 @@
 .modal {
   width: 480px;
-  height: 459px;
+  height: 634px;
   border-radius: 12px;
   background: #c2f5ff;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
 
 .image {
@@ -23,7 +24,6 @@
   font-style: normal;
   font-weight: 400;
   line-height: 48px;
-
   margin-bottom: 28px;
 }
 
@@ -35,7 +35,6 @@
   font-style: normal;
   font-weight: 400;
   line-height: 32px;
-
   margin-bottom: 10px;
 }
 
@@ -46,6 +45,32 @@
   font-style: normal;
   font-weight: 400;
   line-height: 72px;
-
   margin-bottom: 40px;
+}
+
+.input {
+  justify-content: center;
+  width: 276px;
+  padding: 10px;
+  margin: 10px 0;
+  text-align: center;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 28px;
+}
+
+.leaderboardModal {
+  text-align: center;
+}
+
+.link {
+  display: block;
+  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
 }

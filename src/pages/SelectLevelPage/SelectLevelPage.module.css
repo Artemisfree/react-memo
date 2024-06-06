@@ -71,6 +71,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 .checkboxContainer label {
@@ -102,4 +103,13 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.leaderboardLink {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.leaderboardLink:hover {
+  text-decoration: underline;
 }

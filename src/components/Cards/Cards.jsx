@@ -228,6 +228,7 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, threeMistakesMode = 
             gameDurationSeconds={timer.seconds}
             gameDurationMinutes={timer.minutes}
             onClick={resetGame}
+            threeMistakesMode={threeMistakesMode}
           />
         </div>
       ) : null}
