@@ -5,13 +5,13 @@ import styles from "./Cards.module.css";
 import { EndGameModal } from "../../components/EndGameModal/EndGameModal";
 import { Button } from "../../components/Button/Button";
 import { Card } from "../../components/Card/Card";
+import superPowerImage from "./images/eye.png";
+import { Link } from "react-router-dom";
+import { SuperPowerModal } from "../SuperPower/SuperPowerModal";
 
-// Игра закончилась
 const STATUS_LOST = "STATUS_LOST";
 const STATUS_WON = "STATUS_WON";
-// Идет игра: карты закрыты, игрок может их открыть
 const STATUS_IN_PROGRESS = "STATUS_IN_PROGRESS";
-// Начало игры: игрок видит все карты в течении нескольких секунд
 const STATUS_PREVIEW = "STATUS_PREVIEW";
 
 function getTimerValue(startDate, endDate) {
@@ -35,34 +35,26 @@ function getTimerValue(startDate, endDate) {
   };
 }
 
-/**
- * Основной компонент игры, внутри него находится вся игровая механика и логика.
- * pairsCount - сколько пар будет в игре
- * previewSeconds - сколько секунд пользователь будет видеть все карты открытыми до начала игры
- */
 export function Cards({ pairsCount = 3, previewSeconds = 5, threeMistakesMode = false }) {
-  // В cards лежит игровое поле - массив карт и их состояние открыта\закрыта
   const [cards, setCards] = useState([]);
-  // Текущий статус игры
   const [status, setStatus] = useState(STATUS_PREVIEW);
-
   const [mistakes, setMistakes] = useState(0);
-
-  // Дата начала игры
   const [gameStartDate, setGameStartDate] = useState(null);
-  // Дата конца игры
   const [gameEndDate, setGameEndDate] = useState(null);
-
-  // Стейт для таймера, высчитывается в setInteval на основе gameStartDate и gameEndDate
   const [timer, setTimer] = useState({
     seconds: 0,
     minutes: 0,
   });
 
+  const [superPowerUsed, setSuperPowerUsed] = useState(false);
+  const [superPowerActive, setSuperPowerActive] = useState(false);
+  const [showSuperPowerModal, setShowSuperPowerModal] = useState(false);
+
   function finishGame(status = STATUS_LOST) {
     setGameEndDate(new Date());
     setStatus(status);
   }
+
   function startGame() {
     const startDate = new Date();
     setGameEndDate(null);
@@ -70,32 +62,25 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, threeMistakesMode = 
     setTimer(getTimerValue(startDate, null));
     setStatus(STATUS_IN_PROGRESS);
   }
+
   function resetGame() {
     setGameStartDate(null);
     setGameEndDate(null);
     setTimer(getTimerValue(null, null));
     setStatus(STATUS_PREVIEW);
     setMistakes(0);
+    setSuperPowerUsed(false);
+    setSuperPowerActive(false);
   }
 
-  /**
-   * Обработка основного действия в игре - открытие карты.
-   * После открытия карты игра может пепереходит в следующие состояния
-   * - "Игрок выиграл", если на поле открыты все карты
-   * - "Игрок проиграл", если на поле есть две открытые карты без пары
-   * - "Игра продолжается", если не случилось первых двух условий
-   */
   const openCard = clickedCard => {
-    // Если карта уже открыта, то ничего не делаем
     if (clickedCard.open) {
       return;
     }
-    // Игровое поле после открытия кликнутой карты
     const nextCards = cards.map(card => {
       if (card.id !== clickedCard.id) {
         return card;
       }
-
       return {
         ...card,
         open: true,
@@ -106,29 +91,23 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, threeMistakesMode = 
 
     const isPlayerWon = nextCards.every(card => card.open);
 
-    // Победа - все карты на поле открыты
     if (isPlayerWon) {
       finishGame(STATUS_WON);
       return;
     }
 
-    // Открытые карты на игровом поле
     const openCards = nextCards.filter(card => card.open);
 
-    // Ищем открытые карты, у которых нет пары среди других открытых
     const openCardsWithoutPair = openCards.filter(card => {
       const sameCards = openCards.filter(openCard => card.suit === openCard.suit && card.rank === openCard.rank);
-
       if (sameCards.length < 2) {
         return true;
       }
-
       return false;
     });
 
     const playerLost = openCardsWithoutPair.length >= 2;
 
-    // "Игрок проиграл", т.к на поле есть две открытые карты без пары
     if (playerLost) {
       if (threeMistakesMode) {
         setMistakes(mistakes + 1);
@@ -140,19 +119,15 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, threeMistakesMode = 
       }
       return;
     }
-    // ... игра продолжается
   };
 
   const isGameEnded = status === STATUS_LOST || status === STATUS_WON;
 
-  // Игровой цикл
   useEffect(() => {
-    // В статусах кроме превью доп логики не требуется
     if (status !== STATUS_PREVIEW) {
       return;
     }
 
-    // В статусе превью мы
     if (pairsCount > 36) {
       alert("Столько пар сделать невозможно");
       return;
@@ -171,15 +146,40 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, threeMistakesMode = 
     };
   }, [status, pairsCount, previewSeconds]);
 
-  // Обновляем значение таймера в интервале
   useEffect(() => {
+    if (superPowerActive) {
+      const superPowerTimer = setTimeout(() => {
+        setSuperPowerActive(false);
+        setGameStartDate(prevDate => new Date(prevDate.getTime() + 5000));
+      }, 5000);
+      return () => {
+        clearTimeout(superPowerTimer);
+      };
+    }
+
     const intervalId = setInterval(() => {
       setTimer(getTimerValue(gameStartDate, gameEndDate));
     }, 300);
     return () => {
       clearInterval(intervalId);
     };
-  }, [gameStartDate, gameEndDate]);
+  }, [gameStartDate, gameEndDate, superPowerActive]);
+
+  const handleMouseEnter = () => {
+    setShowSuperPowerModal(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowSuperPowerModal(false);
+  };
+
+  const useSuperPower = () => {
+    if (!superPowerUsed && status === STATUS_IN_PROGRESS) {
+      setSuperPowerActive(true);
+      setSuperPowerUsed(true);
+      setShowSuperPowerModal(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -204,6 +204,16 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, threeMistakesMode = 
             </>
           )}
         </div>
+        {status === STATUS_IN_PROGRESS && !superPowerUsed ? (
+          <Link
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onClick={useSuperPower}
+            className={styles.superPowerButton}
+          >
+            <img src={superPowerImage} alt="Прозрение" className={styles.superPowerImage} />
+          </Link>
+        ) : null}
         {status === STATUS_IN_PROGRESS ? <Button onClick={resetGame}>Начать заново</Button> : null}
       </div>
 
@@ -212,7 +222,7 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, threeMistakesMode = 
           <Card
             key={card.id}
             onClick={() => openCard(card)}
-            open={status !== STATUS_IN_PROGRESS ? true : card.open}
+            open={status !== STATUS_IN_PROGRESS || superPowerActive ? true : card.open}
             suit={card.suit}
             rank={card.rank}
           />
@@ -232,6 +242,7 @@ export function Cards({ pairsCount = 3, previewSeconds = 5, threeMistakesMode = 
           />
         </div>
       ) : null}
+      {showSuperPowerModal && <SuperPowerModal onClose={handleMouseLeave} />}
     </div>
   );
 }

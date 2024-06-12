@@ -1,0 +1,46 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.modalWrapper {
+  position: absolute;
+  transform: translateX(-15%) translateY(-50%);
+  z-index: 3;
+}
+
+.modal {
+  width: 210px;
+  height: 223px;
+  background: #c2f5ff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.title {
+  margin: 0 0 10px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 24px;
+  font-family: StratosSkyeng;
+  color: #004980;
+}
+
+.description {
+  margin: 0 0 20px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 24px;
+  font-family: StratosSkyeng;
+  color: #004980;
+}

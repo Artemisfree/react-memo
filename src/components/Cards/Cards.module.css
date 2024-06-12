@@ -80,3 +80,12 @@
   align-items: baseline;
   margin-top: 3rem;
 }
+
+.superPowerButton {
+  position: relative;
+}
+
+.superPowerImage {
+  width: 68px;
+  height: 68px;
+}
