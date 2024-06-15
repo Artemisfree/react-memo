@@ -5,19 +5,38 @@ import deadImageUrl from "./images/dead.png";
 import celebrationImageUrl from "./images/celebration.png";
 import { Link } from "react-router-dom";
 
-export function EndGameModal({ isWon, gameDurationSeconds, gameDurationMinutes, onClick, threeMistakesMode }) {
+export function EndGameModal({
+  isWon,
+  gameDurationSeconds,
+  gameDurationMinutes,
+  onClick,
+  threeMistakesMode,
+  usedSuperPowers,
+}) {
   const title = isWon ? "Вы победили!" : "Вы проиграли!";
   const imgSrc = isWon ? celebrationImageUrl : deadImageUrl;
   const imgAlt = isWon ? "celebration emodji" : "dead emodji";
 
   const [isLeaderboard, setIsLeaderboard] = useState(false);
   const [name, setName] = useState("");
+  const [achievements, setAchievements] = useState([]);
 
   const totalTime = gameDurationMinutes * 60 + gameDurationSeconds;
 
   useEffect(() => {
+    let newAchievements = [];
+    if (isWon) {
+      if (!threeMistakesMode) {
+        newAchievements.push(1);
+      }
+      if (!usedSuperPowers) {
+        newAchievements.push(2);
+      }
+    }
+    setAchievements(newAchievements);
+
     if (isWon && !threeMistakesMode) {
-      fetch("https://wedev-api.sky.pro/api/leaderboard")
+      fetch("https://wedev-api.sky.pro/api/v2/leaderboard")
         .then(response => response.json())
         .then(data => {
           const leaders = data.leaders;
@@ -27,15 +46,15 @@ export function EndGameModal({ isWon, gameDurationSeconds, gameDurationMinutes, 
         })
         .catch(error => console.error("Error fetching leaderboard:", error));
     }
-  }, [isWon, totalTime, threeMistakesMode]);
+  }, [isWon, totalTime, threeMistakesMode, usedSuperPowers]);
 
   const handleSubmit = event => {
     event.preventDefault();
     const playerName = name || "Пользователь";
 
-    fetch("https://wedev-api.sky.pro/api/leaderboard", {
+    fetch("https://wedev-api.sky.pro/api/v2/leaderboard", {
       method: "POST",
-      body: JSON.stringify({ name: playerName, time: totalTime }),
+      body: JSON.stringify({ name: playerName, time: totalTime, achievements }),
     })
       .then(response => {
         if (!response.ok) {
