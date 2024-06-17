@@ -1,0 +1,88 @@
+.leaderboardPage {
+  background-color: transparent;
+  color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 60%;
+  margin: 20px auto;
+  font-family: StratosSkyeng;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 24px;
+  color: #ffffff;
+  margin: 0;
+  font-weight: 400;
+  font-family: StratosSkyeng;
+}
+
+.startGameButton {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 60px;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.startGameButton:hover {
+  background-color: #45a049;
+}
+
+.leaderboard {
+  background-color: transparent;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.rowHeader, .row {
+  display: grid;
+  grid-template-columns: 2fr 3fr 3fr 1fr;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.rowHeader {
+  background-color: #d9dfe5;
+  color: #99a4ac;
+  font-weight: 400;
+  font-size: 16px;
+  font-family: StratosSkyeng;
+}
+
+.row {
+  background-color: #ffffff;
+  color: #002855;
+}
+
+.row:nth-child(even) {
+  background-color: #f7f9fc;
+}
+
+.achievementsContainer {
+  display: flex;
+  align-items: center;
+}
+
+.achievementIcon {
+  width: 24px;
+  height: 24px;
+  margin-right: 5px;
+}
+
+.timeFormatted {
+  font-family: StratosSkyeng;
+  font-size: 16px;
+  color: #002855;
+}

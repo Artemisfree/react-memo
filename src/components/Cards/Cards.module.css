@@ -70,3 +70,22 @@
 
   margin-bottom: -12px;
 }
+
+.mistakes {
+  font-size: 2rem;
+  font-family: StratosSkyeng;
+  color: red;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  margin-top: 3rem;
+}
+
+.superPowerButton {
+  position: relative;
+}
+
+.superPowerImage {
+  width: 68px;
+  height: 68px;
+}
